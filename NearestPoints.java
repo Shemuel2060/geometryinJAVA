@@ -19,7 +19,7 @@ public class NearestPoints{
      * @return distance
      */
     public static double distance(double x1,double y1,double x2,double y2){
-        double dist = Math.sqrt((x2-x1)*(x2-x1) + Math.pow((y2-y1),2));
+        double dist = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
         return dist;
     }
     
@@ -33,13 +33,11 @@ public class NearestPoints{
         Scanner in = new Scanner(System.in);
         System.out.print("Enter number of points: ");
         int n = in.nextInt();
-        System.out.print("Enter points: ");
-        int times = 0;
+        System.out.print("Enter "+n +" points: ");
         points =new double[n][2];
-        while(times<n){
-            points[times][0] = in.nextDouble();
-            points[times][1]= in.nextDouble();
-            times++;
+        for(int i=0;i<points.length;i++){
+            points[i][0] = in.nextDouble();
+            points[i][1]= in.nextDouble();
         }
         in.close();
         return points;
@@ -52,23 +50,29 @@ public class NearestPoints{
      * @return computed distances array
      */
     public static double[] computeDistances(double[][] arr){
-        double[] dists = new double[points.length-1];
-        for(int i=0;i<arr.length;i++){
-            for(int j=i+1;j<arr.length-1;j++){
-                dists[i] = distance(arr[1][0],arr[i][1],arr[j][0],arr[j][1]);
+        double[] dists = new double[arr.length-1];
+        for(int i=0;i<arr.length-1;i++){
+                dists[i] = distance(arr[i][0],arr[i][1],arr[i+1][0],arr[i+1][1]);
             }
-        }
-
         return dists;
-
     }
 
     public static void main(String[] args){
         double[][] pts = enterPoints();
+        // for(int i=0;i<pts.length;i++){
+        //     System.out.println(pts[i][0]+", "+pts[i][1]);
+        // }
+        int r1=0, r2=1; // initial two points
+        double shortestDistance = distance(pts[r1][0],pts[r1][1],pts[r2][0],pts[r2][1]);
+        
         double[] computed = computeDistances(pts);
+        for(int i=0;i<computed.length;i++){
+            System.out.println(""+computed[i]);
+        }
         for(int i=0;i<computed.length-1;i++){
-            if(computed[i]<computed[i+1]){
-                System.out.println("Shortest distance: "+computed[i]+"\nClosest points: ("+pts[i][0]+","+pts[i][1]+")"+
+            if(computed[i]<shortestDistance){
+                shortestDistance = computed[i];
+                System.out.println("Shortest distance: "+shortestDistance+"\nClosest points: ("+pts[i][0]+","+pts[i][1]+")"+
                 ","+"("+pts[i+1][0]+","+pts[i+1][1]+")");
             }
         }
